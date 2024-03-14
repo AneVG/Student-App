@@ -4,9 +4,6 @@ name: Build and Test
 # Този екшън трябва да се стартира при push, pull request събития в main ветката, както и при изпълнение на workflow_dispatch.
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
