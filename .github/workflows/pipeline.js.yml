@@ -10,24 +10,31 @@ on:
   workflow_dispatch:  
 
 jobs:
-  build-test:
+  test-integration:
     runs-on: ubuntu-latest
     steps:
-      # Стъпка за извличане на репозиторито.
       - name: Checkout the repository
         uses: actions/checkout@v2
-
-      # Стъпка за настройка на Node.js 18.
       - name: Use Node.js 20
         uses: actions/setup-node@v3
         with:
           node-version: 20.x
           cache: 'npm'
-
-      # Стъпка за инсталиране на зависимостите.
       - name: Install dependencies
         run: npm install
-
-      # Стъпка за изпълнение на интеграционни тестове.
       - name: Run integration tests
         run: npm test
+  test-security:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Use Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install
+      - name: Run integration tests
+        run: npm test-npm-security        
