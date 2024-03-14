@@ -1,35 +1,34 @@
 
-# Този екшън се използва за изграждане и тестване на проекта.
 name: Build and Test
 
-# Този екшън трябва да се стартира при push и pull request събития в main ветката.
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-# Дефинирайте работния процес.
 jobs:
   build-test:
     runs-on: ubuntu-latest
-    steps:
-      # Стъпка за извличане на репозиторито.
-      - name: Checkout the repository
-        uses: actions/checkout@v2
 
-      # Стъпка за настройка на Node.js 18.
-      - name: Use Node.js 18
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x, 20.x]
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: 18.x
+          node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      # Стъпка за инсталиране на зависимостите.
       - name: Install dependencies
         run: npm install
 
-      # Стъпка за изпълнение на интеграционни тестове.
       - name: Run integration tests
         run: npm test
+
 
