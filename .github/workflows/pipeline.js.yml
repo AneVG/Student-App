@@ -1,16 +1,32 @@
 # Този екшън се използва за изграждане и тестване на проекта.
 name: Build and Test
 
-# Този екшън трябва да се стартира при push и pull request събития в main ветката.
+# Този екшън трябва да се стартира при push, pull request събития в main ветката, както и при изпълнение на workflow_dispatch.
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  workflow_dispatch:  
+  workflow_dispatch:
 
 jobs:
+  test-security:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Use Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install
+      - name: Run integration tests with npm security check
+        run: npm test-npm-security
+
   test-integration:
+    needs: test-security
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
@@ -24,17 +40,6 @@ jobs:
         run: npm install
       - name: Run integration tests
         run: npm test
-  test-security:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2
-      - name: Use Node.js 20
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20.x
-          cache: 'npm'
-      - name: Install dependencies
-        run: npm install
-      - name: Run integration tests
-        run: npm test-npm-security        
+
+
+
